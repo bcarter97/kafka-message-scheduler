@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
 import com.sky.kms.actors.SchedulingActor._
 import com.sky.kms.domain._
+import kamon.Kamon
 import monix.execution.{Cancelable, Scheduler => MonixScheduler}
 
 import scala.concurrent.ExecutionContextExecutor
@@ -15,6 +16,11 @@ import scala.concurrent.duration.FiniteDuration
 class SchedulingActor(publisher: ActorRef, monixScheduler: MonixScheduler) extends Actor with ActorLogging {
 
   implicit val ec: ExecutionContextExecutor = context.dispatcher
+
+  val messages = Kamon.counter("scheduler-messages")
+  val scheduledMessages = messages.refine("status" -> "scheduled")
+  val processedMessages = messages.refine("status" -> "processed")
+
 
   override def receive: Receive = waitForInit orElse stop
 
@@ -31,14 +37,17 @@ class SchedulingActor(publisher: ActorRef, monixScheduler: MonixScheduler) exten
       case CreateOrUpdate(scheduleId: ScheduleId, schedule: Schedule) =>
         schedules.get(scheduleId).fold(log.info(s"Creating schedule $scheduleId")) { schedule =>
           log.info(s"Updating schedule $scheduleId")
+          processedMessages.increment()
           schedule.cancel()
         }
 
         val cancellable = monixScheduler.scheduleOnce(timeFromNow(schedule.time))(publisher ! PublisherActor.Trigger(scheduleId, schedule))
+        scheduledMessages.increment()
         schedules + (scheduleId -> cancellable)
 
       case Cancel(scheduleId: String) =>
         schedules.get(scheduleId).fold(log.warning(s"Unable to cancel $scheduleId as it does not exist.")) { schedule =>
+          processedMessages.increment()
           schedule.cancel()
           log.info(s"Cancelled schedule $scheduleId")
         }
