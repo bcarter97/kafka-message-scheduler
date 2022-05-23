@@ -6,6 +6,7 @@ ThisBuild / semanticdbEnabled                              := true
 ThisBuild / semanticdbVersion                              := scalafixSemanticdb.revision
 ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
 ThisBuild / dynverSeparator                                := "-"
+ThisBuild / dynverSonatypeSnapshots                        := true
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
@@ -29,7 +30,7 @@ lazy val dockerSettings = Seq(
   dockerBaseImage      := "eclipse-temurin:17-jdk-alpine",
   dockerRepository     := Some("skyuk"),
   dockerLabels         := Map("maintainer" -> "Sky"),
-  dockerUpdateLatest   := true,
+  dockerUpdateLatest   := !(ThisBuild / version).value.endsWith("-SNAPSHOT"),
   dockerCommands ++= Seq(
     Cmd("USER", "root"),
     Cmd("RUN", "apk add --no-cache bash")
