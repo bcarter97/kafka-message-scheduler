@@ -5,6 +5,7 @@ ThisBuild / scalafmtOnCompile                              := true
 ThisBuild / semanticdbEnabled                              := true
 ThisBuild / semanticdbVersion                              := scalafixSemanticdb.revision
 ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
+ThisBuild / dynverSeparator                                := "-"
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
