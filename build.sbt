@@ -28,8 +28,7 @@ val compilerSettings = Seq(
 lazy val dockerSettings = Seq(
   Docker / packageName := "kafka-message-scheduler",
   dockerBaseImage      := "eclipse-temurin:17-jdk-alpine",
-  dockerRepository     := Some("skyuk"),
-  dockerLabels         := Map("maintainer" -> "Sky"),
+  dockerRepository     := Some("bcarter97"),
   dockerUpdateLatest   := !(ThisBuild / version).value.endsWith("-SNAPSHOT"),
   dockerCommands ++= Seq(
     Cmd("USER", "root"),
