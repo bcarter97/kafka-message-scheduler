@@ -38,4 +38,4 @@ jobs:
       script: sbt ciBuild
     # run ci-release only if previous stages passed
     - stage: release
-      script:  bash .travis/docker-login.sh && sbt ciRelease
+      script: bash .travis/docker-login.sh && sbt ciRelease
