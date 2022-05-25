@@ -7,6 +7,7 @@ ThisBuild / semanticdbVersion                              := scalafixSemanticdb
 ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
 ThisBuild / dynverSeparator                                := "-"
 ThisBuild / dynverSonatypeSnapshots                        := true
+ThisBuild / dockerRepository                               := Some("ghcr.io")
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
