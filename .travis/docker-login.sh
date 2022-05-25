@@ -1,2 +1,2 @@
 #!/bin/bash
-echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+echo "$GH_PAT" | docker login ghcr.io -u "$GH_USERNAME" --password-stdin
