@@ -28,7 +28,7 @@ lazy val dockerSettings = Seq(
   Docker / packageName := "bcarter97/kafka-message-scheduler",
   dockerBaseImage      := "eclipse-temurin:17-jdk-alpine",
   dockerRepository     := Some("bcarter97/kafka-message-scheduler"),
-  dockerUpdateLatest   := isVersionStable.value,
+  dockerUpdateLatest   := !isSnapshot.value,
   dockerRepository     := Some("ghcr.io"),
   dockerCommands ++= Seq(
     Cmd("USER", "root"),
