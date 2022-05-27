@@ -6,7 +6,6 @@ ThisBuild / semanticdbEnabled                              := true
 ThisBuild / semanticdbVersion                              := scalafixSemanticdb.revision
 ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
 ThisBuild / dynverSeparator                                := "-"
-ThisBuild / dynverSonatypeSnapshots                        := true
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
@@ -29,7 +28,7 @@ lazy val dockerSettings = Seq(
   Docker / packageName := "bcarter97/kafka-message-scheduler",
   dockerBaseImage      := "eclipse-temurin:17-jdk-alpine",
   dockerRepository     := Some("bcarter97/kafka-message-scheduler"),
-  dockerUpdateLatest   := !(ThisBuild / version).value.endsWith("-SNAPSHOT"),
+  dockerUpdateLatest   := !isSnapshot.value,
   dockerRepository     := Some("ghcr.io"),
   dockerCommands ++= Seq(
     Cmd("USER", "root"),
